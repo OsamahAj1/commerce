@@ -1,0 +1,43 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %} Home {% endblock %}
+
+{% block body %}
+
+    {% if category %}
+    <h2>Category: {{ category.title }}</h2>
+    {% else %}
+    <h2>Active Listings</h2> 
+    {% endif %}
+
+    {% for i in item %}
+    {% if i.active is True %}
+
+    <a href="{% url 'list' i.id %}">
+        <div class="row mb-5 m-2 mt-5 d p-5">
+            <div class="col-2">
+                <img src="{{ i.image }}" class="img-fluid" alt="item image">
+            </div>
+            <div class="col mt-5">
+                {{ i.title }}
+            </div>
+            <div class="col mt-5 text-break">
+                {{ i.des }}
+            </div>
+            <div class="col mt-5">
+                {{ i.price | usd }}
+            </div>
+            <div class="col mt-5">
+                <form action="{% url 'watch_edit' i.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="index" value="index">
+                    <input class="btn btn-primary" type="submit" value="Add to watch list">
+                </form>
+            </div>
+        </div>
+    </a>
+    {% endif %}
+    {% empty %}
+    <h3 class="text-info text-center">No active listings</h3>
+    {% endfor %}
+{% endblock %}

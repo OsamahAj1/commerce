@@ -1,0 +1,126 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %} {{ item.title }} {% endblock %}
+
+{% block body %}
+
+<h2>Listing: {{ item.title }}</h2>
+
+
+{% if item.active is False %}
+
+<h1 class="text-danger text-center mb-5 font-weight-bold">THIS BID IS CLOSED</h1>
+
+
+{% if request.user.username == user.user.username %}
+<h1 class="text-success text-center font-weight-bold mb-5">YOU WON THE BID</h1>
+{% endif %}
+
+
+<div class="row mb-4">
+    <img src="{{ item.image }}" alt="item image" class="img-fluid mx-auto d-block imgs">
+</div>
+
+<h3>{{ item.title }}</h3>
+
+<h3>{{ item.price | usd }}</h3>
+
+<h5 class="text-break">{{ item.des }}</h5>
+
+<h5>Listed By: {{ item.user }}.</h5>
+
+<h5 class="mb-4">Category: {{ item.category }}.</h5>
+
+{% if watch is None %}
+<form action="{% url 'watch_edit' item.id %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" value="add" name="add">
+    <input class="btn btn-primary" type="submit" value="Add to watch list">
+</form>
+
+{% else %}
+
+<form action="{% url 'watch_edit' item.id %}" method="post">
+    {% csrf_token %}
+    <input class="btn btn-danger" type="submit" value="Remove from watch list">
+</form>
+
+
+{% endif %}
+
+<h2 class="mb-4 mt-4">Comments</h2>
+{% for i in comments %}
+<section class="ml-5 mt-5">
+    <h3>{{ i.user }}</h3>
+    <p class="fs-4">{{ i.comment }}</p>
+</section>
+{% empty %}
+<h3>No comments</h3>
+{% endfor %}
+<!----------------------------------------------------------->
+
+{% else %}
+
+{% if request.user == item.user %}
+<form action="{% url 'close' item.id %}" class="text-center mb-5 mt-3" method="post">
+    {% csrf_token %}
+    <input class="btn btn-outline-danger btn-lg btn-block" type="submit" value="Close">
+</form>
+{% endif %}
+
+<div class="row mb-5">
+    <img src="{{ item.image }}" alt="item image" class="img-fluid mx-auto d-block imgs">
+</div>
+
+<h3>{{ item.title }}</h3>
+
+<h3>{{ item.price | usd }}</h3>
+
+<h5 class="text-break">{{ item.des }}</h5>
+
+<h5>Listed By: {{ item.user }}.</h5>
+
+<h5 class="mb-4">Category: {{ item.category }}.</h5>
+
+{% if watch is None %}
+<form action="{% url 'watch_edit' item.id %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" value="add" name="add">
+    <input class="btn btn-primary" type="submit" value="Add to watch list">
+</form>
+{% else %}
+<form action="{% url 'watch_edit' item.id %}" method="post">
+    {% csrf_token %}
+    <input class="btn btn-danger" type="submit" value="Remove from watch list">
+</form>
+{% endif %}
+
+<h3 class="mt-4">Bid:</h3>
+<form action="{% url 'bid' item.id %}" method="post">
+    {% csrf_token %}
+    <input autocomplete="off" class="form-control mb-3" type="text" placeholder="Bid" name="bid">
+    <input class="btn btn-primary" type="submit" value="Place Bid">
+</form>
+
+
+<h2 class="mb-4 mt-4">Comments</h2>
+
+<form action="{% url 'comment' item.id %}" method="post" class="mb-5">
+    {% csrf_token %}
+    <textarea rows="4" autocomplete="off" class="form-control mb-3" placeholder="Comment"
+        name="comment"></textarea>
+    <input class="btn btn-primary" type="submit" value="Comment"> 
+</form>
+
+
+{% for i in comments %}
+<section class="ml-5">
+    <h3>{{ i.user }}</h3>
+    <p class="fs-4">{{ i.comment }}</p>
+</section>
+{% empty %}
+<h3>No comments</h3>
+{% endfor %}
+
+{% endif %}
+{% endblock %}

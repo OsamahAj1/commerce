@@ -1,0 +1,46 @@
+{% extends "auctions/layout.html"%}
+
+{% block title %} Create listing {% endblock %}
+
+{% block body %}
+<h2>Create listing</h1>
+
+<form action="{% url 'create' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="text-start ms-5 ps-5 mt-5 fs-3">
+
+        <h3>Title:</h3>
+        <input autocomplete="off" class="form-control mb-5" type="text" placeholder="Title"
+            name="title">
+
+        <h3>Starting Price:</h3>
+        <input autocomplete="off" class="form-control mb-5" type="text" placeholder="Price"
+            name="price">
+
+        <h3>Description:</h3>
+        <textarea rows="5" autocomplete="off" class="form-control mb-5" placeholder="Description" name="des"></textarea>
+
+        <h3>Choose category already in auction:</h3>
+        <select class="form-control fs-5 mb-5" name="in_category">
+            <option disabled="" selected="">Category</option>
+            {% for i in categories %}
+            <option value="{{i.title}}">{{ i.title }}</option>
+            {% endfor %}
+        </select>
+
+        <p class="text-danger mb-5">OR
+
+        <h3>Add new category:</h3>
+        <input autocomplete="off" class="form-control mb-5" type="text" placeholder="type" name="new_category">
+
+        <h3>Image url: <span class="text-info h5">optionally.</span></h3>
+        <input autocomplete="off" class="form-control mb-5" type="url" placeholder="url" name="image">
+
+        <input class="btn btn-primary" type="submit" value="Create">
+    </div>
+</form>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %} WatchList {% endblock %}
+
+{% block body %}
+
+<h2>Watch List</h2>
+
+{% for i in watch %}
+<a href="{% url 'list' i.item.id %}">
+    <div class="row mb-5 m-2 mt-5 p-5 d">
+        <div class="col-2">
+            <img src="{{ i.item.image }}" class="img-fluid">
+        </div>
+        <div class="col mt-5">
+            {{ i.item.title }}
+        </div>
+        <div class="col mt-5 text-break">
+            {{ i.item.des }}
+        </div>
+        <div class="col mt-5">
+            {{ i.item.price | usd }}
+        </div>
+        <div class="col mt-5">
+            <form action="{% url 'watch_edit' i.item.id %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="watch" value="watch">
+                <input class="btn btn-danger" type="submit" value="Remove from watch list">
+            </form>
+        </div>
+    </div>
+</a>
+{% empty %}
+<h3 class="text-center">No listings in watch list go to <a href="{% url 'index' %}">active listings </a>to add listings</h3>
+{% endfor %}
+
+{% endblock %}
